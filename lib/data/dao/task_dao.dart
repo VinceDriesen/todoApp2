@@ -29,6 +29,32 @@ class TaskDao {
 
   Future<int> deleteTask(int id) async {
     final db = await AppDatabase.instance.database;
-    return await db.delete('tasks', where: 'id = ?', whereArgs: [id]);
+
+    final result = await db.query('tasks', where: 'id = ?', whereArgs: [id]);
+    if (result.isEmpty) return 0;
+    final taskToDelete = Task.fromMap(result.first);
+    final listId = taskToDelete.listId;
+    final volgorde = taskToDelete.volgorde;
+
+    final deleted = await db.delete('tasks', where: 'id = ?', whereArgs: [id]);
+
+    final tasksToUpdate = await db.query(
+      'tasks',
+      where: 'listId = ? AND volgorde > ?',
+      whereArgs: [listId, volgorde],
+    );
+
+    for (final map in tasksToUpdate) {
+      final task = Task.fromMap(map);
+      final updatedTask = task.copyWith(volgorde: task.volgorde - 1);
+      await db.update(
+        'tasks',
+        updatedTask.toMap(),
+        where: 'id = ?',
+        whereArgs: [task.id],
+      );
+    }
+
+    return deleted;
   }
 }

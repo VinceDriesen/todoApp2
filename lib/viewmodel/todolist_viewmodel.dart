@@ -62,6 +62,7 @@ class TodolistViewModel extends ChangeNotifier {
       description: description ?? '',
       listId: _todoList.id!,
       priority: priority,
+      volgorde: tasks.length,
     );
     await taskDao.insertTask(newTask);
     await loadTasks();
@@ -70,7 +71,7 @@ class TodolistViewModel extends ChangeNotifier {
   List<Task> getTodos() {
     // Maak een gesorteerde kopie van de takenlijst
     List<Task> sortedTasks = List.from(tasks);
-    sortedTasks.sort((a, b) => b.priority.index - a.priority.index);
+    sortedTasks.sort((a, b) => a.volgorde - b.volgorde);
     return sortedTasks;
   }
 
@@ -97,5 +98,20 @@ class TodolistViewModel extends ChangeNotifier {
       }
     }
     loadTasks();
+  }
+
+  void reorderTasks(int oldIndex, int newIndex) async {
+    if (newIndex > oldIndex) newIndex -= 1;
+
+    final task = tasks.removeAt(oldIndex);
+    tasks.insert(newIndex, task);
+
+    // werk de volgorde in DB bij
+    for (int i = 0; i < tasks.length; i++) {
+      tasks[i] = tasks[i].copyWith(volgorde: i);
+      await taskDao.updateTask(tasks[i]);
+    }
+
+    notifyListeners();
   }
 }

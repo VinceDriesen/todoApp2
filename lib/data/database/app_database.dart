@@ -36,6 +36,7 @@ class AppDatabase {
       isDone INTEGER NOT NULL,
       listId INTEGER NOT NULL,
       priority INTEGER NOT NULL,
+      volgorde INTEGER NOT NULL,
       FOREIGN KEY (listId) REFERENCES todolists (id) ON DELETE CASCADE
     )
     ''');

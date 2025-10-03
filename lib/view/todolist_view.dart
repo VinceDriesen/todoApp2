@@ -36,15 +36,19 @@ class TodolistView extends StatelessWidget {
         ),
         body: Consumer<TodolistViewModel>(
           builder: (context, viewModel, child) {
-            // Example: show todos from viewmodel
             if (viewModel.getTodos().isEmpty) {
               return const Center(child: Text('Geen taken'));
             }
-            return ListView.builder(
+            return ReorderableListView.builder(
+              onReorder: (oldIndex, newIndex) {
+                print('Old index: $oldIndex, New index: $newIndex');
+                viewModel.reorderTasks(oldIndex, newIndex);
+              },
               itemCount: viewModel.getTodos().length,
               itemBuilder: (context, index) {
                 final task = viewModel.getTodos()[index];
                 return InkWell(
+                  key: ValueKey(task.volgorde),
                   onTap: () {
                     viewModel.gotoTask(task);
                   },
@@ -71,6 +75,7 @@ class TodolistView extends StatelessWidget {
                             ],
                           ),
                         ),
+                        const SizedBox(width: 20),
                       ],
                     ),
                   ),

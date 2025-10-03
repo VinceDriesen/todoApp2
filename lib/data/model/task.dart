@@ -7,6 +7,7 @@ class Task {
   final bool isDone;
   final int listId; // foreign key
   final TaskPriority priority;
+  final int volgorde;
 
   Task({
     this.id,
@@ -15,6 +16,7 @@ class Task {
     this.isDone = false,
     required this.listId,
     required this.priority,
+    required this.volgorde,
   });
 
   Map<String, dynamic> toMap() {
@@ -24,7 +26,8 @@ class Task {
       'isDone': isDone ? 1 : 0,
       'listId': listId,
       'description': description,
-      'priority': priority.index, // <-- serialize as int
+      'priority': priority.index,
+      'volgorde': volgorde,
     };
   }
 
@@ -35,8 +38,8 @@ class Task {
       isDone: map['isDone'] == 1,
       listId: map['listId'],
       description: map['description'] ?? '',
-      priority:
-          TaskPriority.values[map['priority']], // <-- deserialize from int
+      priority: TaskPriority.values[map['priority']],
+      volgorde: map['volgorde'],
     );
   }
 
@@ -47,6 +50,7 @@ class Task {
     int? listId,
     String? description,
     TaskPriority? priority,
+    int? volgorde,
   }) {
     return Task(
       id: id ?? this.id,
@@ -55,6 +59,7 @@ class Task {
       listId: listId ?? this.listId,
       description: description ?? this.description,
       priority: priority ?? this.priority,
+      volgorde: volgorde ?? this.volgorde,
     );
   }
 }
