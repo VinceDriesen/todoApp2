@@ -9,13 +9,13 @@ class NavigatorService {
     navigatorKey = GlobalKey<NavigatorState>();
   }
 
-  navigate(Widget page) {
-    navigatorKey.currentState?.push(
+  Future<T?> navigate<T>(Widget page) {
+    return navigatorKey.currentState!.push<T>(
       MaterialPageRoute(builder: (context) => page),
     );
   }
 
-  goBack() {
-    navigatorKey.currentState?.pop();
+  void goBack<T extends Object?>([T? result]) {
+    navigatorKey.currentState!.pop<T>(result);
   }
 }

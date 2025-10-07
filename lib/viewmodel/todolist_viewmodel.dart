@@ -72,7 +72,6 @@ class TodolistViewModel extends ChangeNotifier {
   }
 
   List<Task> getTodos() {
-    // Maak een gesorteerde kopie van de takenlijst
     List<Task> sortedTasks = List.from(tasks);
     sortedTasks.sort((a, b) => a.volgorde - b.volgorde);
     return sortedTasks;
@@ -90,8 +89,11 @@ class TodolistViewModel extends ChangeNotifier {
     loadTasks();
   }
 
-  void gotoTask(task) {
-    _navigatorService.navigate(TaskView(task: task, updateTasks: loadTasks));
+  Future<void> gotoTask(task) async {
+    final result = await _navigatorService.navigate<bool>(TaskView(task: task));
+    if (result == true) {
+      loadTasks();
+    }
   }
 
   void removeAllDoneTasks() {

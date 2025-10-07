@@ -6,17 +6,24 @@ import '../data/model/task_priority.dart';
 
 class TaskView extends StatelessWidget {
   final Task task;
-  final void Function() updateTasks;
 
-  const TaskView({super.key, required this.task, required this.updateTasks});
+  const TaskView({super.key, required this.task});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => TaskViewModel(task, updateTasks),
+      create: (_) => TaskViewModel(task),
       builder: (context, child) {
         return Scaffold(
-          appBar: AppBar(title: Text(task.title)),
+          appBar: AppBar(
+            title: Text(task.title),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Consumer<TaskViewModel>(

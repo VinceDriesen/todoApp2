@@ -7,9 +7,8 @@ import '../service/navigator.dart';
 class TaskViewModel extends ChangeNotifier {
   Task _task;
   TaskDao taskDao = TaskDao();
-  final void Function() updateTasks;
 
-  TaskViewModel(this._task, this.updateTasks);
+  TaskViewModel(this._task);
 
   String get title => _task.title;
   set title(String value) {
@@ -38,8 +37,5 @@ class TaskViewModel extends ChangeNotifier {
 
   void save() {
     taskDao.updateTask(_task);
-    updateTasks();
-
-    // Save to database or API
   }
 }
