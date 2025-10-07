@@ -49,16 +49,12 @@ class TodolistsViewModel extends ChangeNotifier {
     return todoLists;
   }
 
-  void onListDeleted() async {
-    await loadTodoLists();
-  }
-
-  void gotoTodoList(TodoList todoList) {
-    _navigatorService.navigate(
-      TodolistView(
-        todoList: todoList,
-        onListDeleted: onListDeleted, // Pass callback
-      ),
+  Future<void> gotoTodoList(TodoList todoList) async {
+    final result = await _navigatorService.navigate<bool>(
+      TodolistView(todoList: todoList),
     );
+    if (result == true) {
+      loadTodoLists();
+    }
   }
 }

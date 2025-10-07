@@ -5,19 +5,13 @@ import '../viewmodel/todolist_viewmodel.dart'; // Import your viewmodel
 import '../service/navigator.dart';
 
 class TodolistView extends StatelessWidget {
-  const TodolistView({
-    super.key,
-    required this.todoList,
-    required this.onListDeleted,
-  });
+  const TodolistView({super.key, required this.todoList});
   final TodoList todoList;
-  final VoidCallback onListDeleted;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) =>
-          TodolistViewModel(todoList, NavigatorService.instance, onListDeleted),
+      create: (_) => TodolistViewModel(todoList, NavigatorService.instance),
       child: Scaffold(
         appBar: AppBar(
           title: Text('Todo List: ${todoList.name}'),

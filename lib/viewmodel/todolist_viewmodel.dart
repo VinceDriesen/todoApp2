@@ -14,14 +14,9 @@ class TodolistViewModel extends ChangeNotifier {
   final TodoList _todoList;
   final TodoListDao todoDao = TodoListDao();
   final TaskDao taskDao = TaskDao();
-  final VoidCallback onListDeleted;
   List<Task> tasks = [];
 
-  TodolistViewModel(
-    this._todoList,
-    this._navigatorService,
-    this.onListDeleted,
-  ) {
+  TodolistViewModel(this._todoList, this._navigatorService) {
     loadTasks();
   }
 
@@ -37,11 +32,10 @@ class TodolistViewModel extends ChangeNotifier {
       return;
     }
     try {
-      _navigatorService.goBack();
+      _navigatorService.goBack(true);
       await todoDao.deleteList(list.id!);
       print(await todoDao.getLists().then((value) => value.length));
       print("List deleted successfully");
-      onListDeleted();
     } catch (e) {
       print("Error deleting list: $e");
     }
