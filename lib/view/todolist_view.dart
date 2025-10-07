@@ -216,7 +216,6 @@ class EditListNameButton extends StatelessWidget {
             }
           },
           child: const Icon(Icons.edit),
-          tooltip: 'Edit list name',
         );
       },
     );
