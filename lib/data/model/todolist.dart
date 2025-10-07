@@ -11,4 +11,8 @@ class TodoList {
   factory TodoList.fromMap(Map<String, dynamic> map) {
     return TodoList(id: map['id'], name: map['name']);
   }
+
+  TodoList copyWith({int? id, String? name}) {
+    return TodoList(id: id ?? this.id, name: name ?? this.name);
+  }
 }

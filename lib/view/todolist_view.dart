@@ -14,7 +14,11 @@ class TodolistView extends StatelessWidget {
       create: (_) => TodolistViewModel(todoList, NavigatorService.instance),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Todo List: ${todoList.name}'),
+          title: Consumer<TodolistViewModel>(
+            builder: (context, viewModel, child) {
+              return Text('Todo List: ${viewModel.todoListName}');
+            },
+          ),
           actions: [
             Consumer<TodolistViewModel>(
               builder: (context, viewModel, child) {
@@ -27,6 +31,17 @@ class TodolistView extends StatelessWidget {
               },
             ),
           ],
+          leading: Consumer<TodolistViewModel>(
+            builder: (context, viewModel, child) {
+              return IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  viewModel
+                      .goBack(); // Zorg dat deze methode bestaat in je ViewModel
+                },
+              );
+            },
+          ),
         ),
         body: Consumer<TodolistViewModel>(
           builder: (context, viewModel, child) {
@@ -118,15 +133,27 @@ class TodolistView extends StatelessWidget {
           },
         ),
 
-        floatingActionButton: Consumer<TodolistViewModel>(
-          builder: (context, viewModel, child) {
-            return FloatingActionButton(
-              onPressed: () {
-                viewModel.gotoAddTask();
-              },
-              child: const Icon(Icons.add),
-            );
-          },
+        floatingActionButton: Stack(
+          children: [
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Consumer<TodolistViewModel>(
+                builder: (context, viewModel, child) {
+                  return FloatingActionButton(
+                    onPressed: () {
+                      viewModel.gotoAddTask();
+                    },
+                    child: const Icon(Icons.add),
+                  );
+                },
+              ),
+            ),
+            Positioned(
+              left: 40, // Afstand tot de linkerkant
+              bottom: 20, // Afstand tot de onderkant
+              child: const EditListNameButton(),
+            ),
+          ],
         ),
         bottomNavigationBar: Consumer<TodolistViewModel>(
           builder: (context, viewModel, child) {
@@ -145,6 +172,53 @@ class TodolistView extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class EditListNameButton extends StatelessWidget {
+  const EditListNameButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<TodolistViewModel>(
+      builder: (context, viewModel, child) {
+        return FloatingActionButton(
+          heroTag: 'editListName',
+          mini: true,
+          backgroundColor: Colors.blueGrey,
+          onPressed: () async {
+            final controller = TextEditingController(
+              text: viewModel.todoListName,
+            );
+            final confirmed = await showDialog<bool>(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Edit list name'),
+                content: TextField(
+                  controller: controller,
+                  decoration: const InputDecoration(labelText: 'List name'),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false),
+                    child: const Text('Cancel'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(true),
+                    child: const Text('Save'),
+                  ),
+                ],
+              ),
+            );
+            if (confirmed == true) {
+              viewModel.editListName(controller.text);
+            }
+          },
+          child: const Icon(Icons.edit),
+          tooltip: 'Edit list name',
+        );
+      },
     );
   }
 }

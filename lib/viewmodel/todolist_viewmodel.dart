@@ -11,7 +11,7 @@ import '../data/model/task_priority.dart';
 
 class TodolistViewModel extends ChangeNotifier {
   final NavigatorService _navigatorService;
-  final TodoList _todoList;
+  TodoList _todoList;
   final TodoListDao todoDao = TodoListDao();
   final TaskDao taskDao = TaskDao();
   List<Task> tasks = [];
@@ -19,6 +19,8 @@ class TodolistViewModel extends ChangeNotifier {
   TodolistViewModel(this._todoList, this._navigatorService) {
     loadTasks();
   }
+
+  get todoListName => _todoList.name;
 
   Future<void> loadTasks() async {
     tasks = await taskDao.getTasksByList(_todoList.id!);
@@ -130,5 +132,20 @@ class TodolistViewModel extends ChangeNotifier {
 
     await loadTasks();
     notifyListeners();
+  }
+
+  void editListName(String newName) {
+    if (newName.trim().isEmpty) {
+      newName = "New List";
+    }
+    final updatedList = _todoList.copyWith(name: newName);
+    todoDao.updateList(updatedList);
+    _todoList = updatedList;
+
+    notifyListeners();
+  }
+
+  void goBack() {
+    _navigatorService.goBack(true);
   }
 }
