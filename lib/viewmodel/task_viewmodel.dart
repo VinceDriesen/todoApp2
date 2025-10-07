@@ -12,6 +12,9 @@ class TaskViewModel extends ChangeNotifier {
 
   String get title => _task.title;
   set title(String value) {
+    if (value.trim().isEmpty) {
+      value = "New Task";
+    }
     _task = _task.copyWith(title: value);
     notifyListeners();
   }
