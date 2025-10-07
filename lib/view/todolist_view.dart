@@ -68,8 +68,47 @@ class TodolistView extends StatelessWidget {
                               Text(task.title),
                               Row(
                                 children: [
-                                  Text('Priority: '),
-                                  Text(task.priority.toString().split('.')[1]),
+                                  Row(
+                                    children: [
+                                      Text('Priority: '),
+                                      Text(
+                                        task.priority.toString().split('.')[1],
+                                      ),
+                                    ],
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete),
+                                    color: Colors.red,
+                                    tooltip: 'Verwijder taak',
+                                    onPressed: () async {
+                                      final confirmed = await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          title: const Text('Are you sure?'),
+                                          content: const Text(
+                                            'Wil je deze taak echt verwijderen?',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                              ).pop(false),
+                                              child: const Text('Nee'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                              ).pop(true),
+                                              child: const Text('Ja'),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                      if (confirmed == true) {
+                                        viewModel.deleteTask(task);
+                                      }
+                                    },
+                                  ),
                                 ],
                               ),
                             ],

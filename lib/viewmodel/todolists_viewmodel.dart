@@ -19,6 +19,9 @@ class TodolistsViewModel extends ChangeNotifier {
   }
 
   Future<void> addTodoList(String listName) async {
+    if (listName.trim().isEmpty) {
+      listName = "New List";
+    }
     final existingList = await dao.getListByName(listName);
     if (existingList != null) {
       return;

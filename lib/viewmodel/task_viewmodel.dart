@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:todoapp2/data/dao/task_dao.dart';
 import 'package:todoapp2/data/model/task_priority.dart';
 import '../data/model/task.dart';
+import '../service/navigator.dart';
 
 class TaskViewModel extends ChangeNotifier {
   Task _task;
   TaskDao taskDao = TaskDao();
+  final void Function() updateTasks;
 
-  TaskViewModel(this._task);
+  TaskViewModel(this._task, this.updateTasks);
 
   String get title => _task.title;
   set title(String value) {
@@ -29,14 +31,14 @@ class TaskViewModel extends ChangeNotifier {
 
   bool get isDone => _task.isDone;
   set isDone(bool value) {
+    print("isDone set to $value");
     _task = _task.copyWith(isDone: value);
     notifyListeners();
   }
 
   void save() {
-    // print(title);
-
     taskDao.updateTask(_task);
+    updateTasks();
 
     // Save to database or API
   }

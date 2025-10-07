@@ -6,13 +6,14 @@ import '../data/model/task_priority.dart';
 
 class TaskView extends StatelessWidget {
   final Task task;
+  final void Function() updateTasks;
 
-  const TaskView({super.key, required this.task});
+  const TaskView({super.key, required this.task, required this.updateTasks});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => TaskViewModel(task),
+      create: (_) => TaskViewModel(task, updateTasks),
       builder: (context, child) {
         return Scaffold(
           appBar: AppBar(title: Text(task.title)),
@@ -74,6 +75,7 @@ class _IsTaskDoneState extends State<IsTaskDone> {
                   value: widget.viewModel.isDone,
                   onChanged: (value) {
                     setState(() {
+                      print(value);
                       widget.viewModel.isDone = value!;
                     });
                     widget.viewModel.save();

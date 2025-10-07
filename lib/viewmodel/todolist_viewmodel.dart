@@ -52,6 +52,9 @@ class TodolistViewModel extends ChangeNotifier {
     String? description,
     TaskPriority priority,
   ) async {
+    if (title.trim().isEmpty) {
+      title = "New Task";
+    }
     if (_todoList.id == null) {
       print("TodoList ID is null, cannot add task");
       return;
@@ -88,13 +91,13 @@ class TodolistViewModel extends ChangeNotifier {
   }
 
   void gotoTask(task) {
-    _navigatorService.navigate(TaskView(task: task));
+    _navigatorService.navigate(TaskView(task: task, updateTasks: loadTasks));
   }
 
   void removeAllDoneTasks() {
     for (Task task in tasks) {
       if (task.isDone) {
-        taskDao.deleteTask(task.id!);
+        this.deleteTask(task);
       }
     }
     loadTasks();
@@ -112,6 +115,24 @@ class TodolistViewModel extends ChangeNotifier {
       await taskDao.updateTask(tasks[i]);
     }
 
+    notifyListeners();
+  }
+
+  void deleteTask(Task task) async {
+    final deletedOrder = task.volgorde;
+
+    await taskDao.deleteTask(task.id!);
+
+    tasks.removeWhere((t) => t.id == task.id);
+
+    for (var t in tasks) {
+      if (t.volgorde > deletedOrder) {
+        t = t.copyWith(volgorde: t.volgorde - 1);
+        await taskDao.updateTask(t);
+      }
+    }
+
+    await loadTasks();
     notifyListeners();
   }
 }
