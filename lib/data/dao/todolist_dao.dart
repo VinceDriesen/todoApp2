@@ -25,7 +25,7 @@ class TodoListDao {
     if (result.isNotEmpty) {
       return TodoList.fromMap(result.first);
     } else {
-      return null; // geen lijst gevonden
+      return null;
     }
   }
 
@@ -37,9 +37,9 @@ class TodoListDao {
   Future<void> updateList(TodoList list) async {
     final db = await AppDatabase.instance.database;
     await db.update(
-      'todolists', // naam van je tabel
-      list.toMap(), // nieuwe data
-      where: 'id = ?', // zoek op id
+      'todolists',
+      list.toMap(),
+      where: 'id = ?',
       whereArgs: [list.id],
     );
   }

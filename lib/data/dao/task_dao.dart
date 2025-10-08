@@ -20,7 +20,6 @@ class TaskDao {
   Future<int> updateTask(Task task) async {
     final db = await AppDatabase.instance.database;
     print(task.isDone);
-    print("HUUUUUUUUUUUUUUu");
     return await db.update(
       'tasks',
       task.toMap(),
