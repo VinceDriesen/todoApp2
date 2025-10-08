@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import '../data/model/todolist.dart';
 import '../data/dao/todolist_dao.dart';
 import '../service/navigator.dart';

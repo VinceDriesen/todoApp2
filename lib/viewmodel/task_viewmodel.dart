@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:todoapp2/data/dao/task_dao.dart';
 import 'package:todoapp2/data/model/task_priority.dart';
 import '../data/model/task.dart';
-import '../service/navigator.dart';
 
 class TaskViewModel extends ChangeNotifier {
   Task _task;
