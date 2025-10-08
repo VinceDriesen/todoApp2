@@ -6,8 +6,6 @@ import './data/database/app_database.dart';
 import './service/navigator.dart';
 import 'package:provider/provider.dart';
 import './viewmodel/todolists_viewmodel.dart';
-
-// Alleen importeren op desktop
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() async {

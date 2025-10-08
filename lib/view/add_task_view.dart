@@ -63,13 +63,16 @@ class _TaskFormState extends State<TaskForm> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () {
-              widget.addTask(
+            onPressed: () async {
+              await widget.addTask(
                 textController.text,
                 descriptionController.text,
                 _selectedPriority,
               );
-              Navigator.of(context).pop();
+
+              Navigator.of(context).pop(
+                true,
+              ); // geef 'true' terug zodat de vorige view weet dat iets is gewijzigd
             },
             child: const Text('Save Task'),
           ),
